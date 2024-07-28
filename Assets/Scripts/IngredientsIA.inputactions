@@ -83,10 +83,10 @@
                 {
                     "name": "",
                     "id": "6964f536-5c15-40c8-a2a1-6a6d041be956",
-                    "path": "<Keyboard>/d",
+                    "path": "<Keyboard>/downArrow",
                     "interactions": "",
                     "processors": "",
-                    "groups": "",
+                    "groups": "PotionMaking",
                     "action": "Down",
                     "isComposite": false,
                     "isPartOfComposite": false

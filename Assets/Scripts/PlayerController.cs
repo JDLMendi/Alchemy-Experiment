@@ -1,7 +1,7 @@
 using UnityEngine;
 using UnityEngine.UI;
 
-public class CanvasCycler : MonoBehaviour
+public class PlayerController : MonoBehaviour
 {
     [SerializeField] private Canvas[] _categories;
     private int _index = 0;
@@ -43,7 +43,7 @@ public class CanvasCycler : MonoBehaviour
             GraphicRaycaster raycaster = _categories[i].GetComponent<GraphicRaycaster>();
             if (raycaster != null)
             {
-                raycaster.enabled = (i == _index);
+                raycaster.enabled = i == _index;
             }
         }
     }
