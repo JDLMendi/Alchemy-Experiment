@@ -10,8 +10,10 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 225ffb8dc2590644899ade2a1a7d9419, type: 3}
-  m_Name: Salt
+  m_Name: Ingredient 1
   m_EditorClassIdentifier: 
-  baseName: Salt
-  baseColour: {r: 0.6981132, g: 0.6981132, b: 0.6981132, a: 0}
-  baseSprite: {fileID: 21300000, guid: 5eb245907efea0447a78d2e6c392bbd7, type: 3}
+  itemName: Ingredient 1
+  itemID: 4
+  itemtype: 2
+  itemColour: {r: 1, g: 0.5429854, b: 0, a: 0}
+  itemSprite: {fileID: 10915, guid: 0000000000000000f000000000000000, type: 0}

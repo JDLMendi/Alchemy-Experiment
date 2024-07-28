@@ -10,8 +10,10 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 225ffb8dc2590644899ade2a1a7d9419, type: 3}
-  m_Name: Ash
+  m_Name: Salt
   m_EditorClassIdentifier: 
-  baseName: Ash
-  baseColour: {r: 0.26415092, g: 0.1457814, b: 0.1457814, a: 1}
-  baseSprite: {fileID: 21300000, guid: 3e9d2f4ae29d5e945a84ea705d13e632, type: 3}
+  itemName: Salt
+  itemID: 1
+  itemtype: 0
+  itemColour: {r: 0.00077319145, g: 1, b: 0, a: 0}
+  itemSprite: {fileID: 21300000, guid: 5eb245907efea0447a78d2e6c392bbd7, type: 3}

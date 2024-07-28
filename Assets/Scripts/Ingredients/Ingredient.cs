@@ -3,25 +3,25 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-[CreateAssetMenu]
-public class BaseIngredient : ScriptableObject
+public enum itemType
 {
-    public string baseName;
-    public Color baseColour;
-    public Sprite baseSprite;
+    Base,
+    Special,
+    Effect,
+    Bottle
 }
 
 [CreateAssetMenu]
-public class EffectIngredient : ScriptableObject
+public class Ingredient : ScriptableObject
 {
-    public string effectName;
-    public Color effectColour;
-    public Sprite effectSprite;
-}
+    public string itemName;
+    public int itemID;
 
-[CreateAssetMenu]
-public class BottleIngredient : ScriptableObject
-{
-    public string bottleName;
-    public Sprite bottleSprite;
+    public itemType itemtype;
+
+    public Color itemColour;
+
+    public Sprite itemSprite;
+
+
 }
