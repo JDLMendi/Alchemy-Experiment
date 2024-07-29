@@ -16,12 +16,9 @@ public class Ingredient : ScriptableObject
 {
     public string itemName;
     public int itemID;
-
     public itemType itemtype;
-
     public Color itemColour;
-
     public Sprite itemSprite;
-
+    public Sprite FallSprite;
 
 }

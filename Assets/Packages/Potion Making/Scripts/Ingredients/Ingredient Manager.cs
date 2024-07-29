@@ -2,7 +2,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using System.Collections;
 
-public class ItemSelectionManager : MonoBehaviour
+public class IngredientManager : MonoBehaviour
 {
     public ToggleGroup[] toggleGroups; // Assign these in the Inspector
     public GameObject targetObject; // Assign this in the Inspector
