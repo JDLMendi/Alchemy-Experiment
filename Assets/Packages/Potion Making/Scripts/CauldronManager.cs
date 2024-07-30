@@ -1,151 +1,84 @@
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class CauldronController : MonoBehaviour
 {
-    public AudioClip[] audioClips;  // Array to hold the audio clips
-    private Color _originalLiquidColor;
+    public AudioClip[] audioClips;
     public ParticleSystem particleSys;
-    private AudioSource _audioSource;  // AudioSource component
-    public float colorTransitionDuration = 1.0f; // Duration for color transition
+    public float colorTransitionDuration = 1.0f;
+
+    private Color _originalLiquidColour;
+    private Color _firstColour;
+    private AudioSource _audioSource;
 
     void Start()
     {
-        // Get the AudioSource component attached to this GameObject
-        _audioSource = GetComponent<AudioSource>();
-        if (_audioSource == null)
-        {
-            // If no AudioSource is found, add one
-            _audioSource = gameObject.AddComponent<AudioSource>();
-        }
-
-        SpriteRenderer liquidSpriteRenderer = GetChildSpriteRenderer("Liquid");
+        _audioSource = GetComponent<AudioSource>() ?? gameObject.AddComponent<AudioSource>();
+        var liquidSpriteRenderer = GetChildSpriteRenderer("Liquid");
         if (liquidSpriteRenderer != null)
         {
-            _originalLiquidColor = liquidSpriteRenderer.color;
+            _originalLiquidColour = liquidSpriteRenderer.color;
+            _firstColour = liquidSpriteRenderer.color;
         }
     }
 
-    SpriteRenderer GetChildSpriteRenderer(string childName)
-    {
-        Transform child = transform.Find(childName);
-        if (child != null)
-        {
-            return child.GetComponent<SpriteRenderer>();
-        }
-        return null;
-    }
+    SpriteRenderer GetChildSpriteRenderer(string name) => transform.Find(name)?.GetComponent<SpriteRenderer>();
 
-    // This method is called when another collider enters the trigger
     void OnCollisionEnter2D(Collision2D collision)
     {
-        // Retrieve the color of the collided object
-        Color collidedColor = GetSpriteColor(collision.gameObject);
+        var ingredientSlot = collision.gameObject.GetComponent<IngredientSlot>();
+        var collidedColor = (ingredientSlot != null && ingredientSlot.ingredient != null && ingredientSlot.ingredient.itemtype != itemType.Bottle)
+            ? ingredientSlot.ingredient.itemColour
+            : _originalLiquidColour;
 
-        // Retrieve the color of the current object
-        Color currentColor = GetSpriteColor(gameObject);
+        var mixedColor = MixColors(collidedColor, _originalLiquidColour);
 
-        // Mix the colors
-        Color mixedColor = MixColors(collidedColor, currentColor);
+        var instantiatedParticleSys = Instantiate(particleSys, collision.transform.position, Quaternion.identity);
+        instantiatedParticleSys.Play();
+        Destroy(instantiatedParticleSys.gameObject, instantiatedParticleSys.main.duration);
 
-        // Instantiate and configure the particle system
-        ParticleSystem instantiatedParticleSystem = Instantiate(particleSys, collision.transform.position, Quaternion.identity);
-        var mainModule = instantiatedParticleSystem.main;
-        mainModule.startColor = _originalLiquidColor; // Set to the original color
-        instantiatedParticleSystem.Play();
-
-        // Apply the mixed color to the child object named "Liquid" with a transition
-        StartCoroutine(TransitionColor("Liquid", _originalLiquidColor, mixedColor, colorTransitionDuration));
-        _originalLiquidColor = mixedColor;
+        StartCoroutine(TransitionColor("Liquid", _originalLiquidColour, mixedColor, colorTransitionDuration));
+        _originalLiquidColour = mixedColor;
 
         PlayRandomClip();
-
-        // Destroy the colliding object
         Destroy(collision.gameObject);
     }
 
-    Color GetSpriteColor(GameObject obj)
+    public void ToPotionColour(Color potionColor)
     {
-        SpriteRenderer spriteRenderer = obj.GetComponent<SpriteRenderer>();
-        if (spriteRenderer != null)
-        {
-            return spriteRenderer.color;
-        }
-        return Color.white; // Default color if no sprite renderer is found
+        StartCoroutine(TransitionColor("Liquid", _originalLiquidColour, potionColor, colorTransitionDuration));
+        _originalLiquidColour = potionColor;
     }
 
-    void SetChildSpriteColor(string childName, Color color)
+    public void RestartCauldron()
     {
-        Transform child = transform.Find(childName);
-        if (child != null)
-        {
-            SpriteRenderer spriteRenderer = child.GetComponent<SpriteRenderer>();
-            if (spriteRenderer != null)
-            {
-                spriteRenderer.color = color;
-            }
-        }
-        else
-        {
-            Debug.LogWarning($"Child named {childName} not found.");
-        }
+        StartCoroutine(TransitionColor("Liquid", _originalLiquidColour, _firstColour, colorTransitionDuration));
+        _originalLiquidColour = Color.blue;
     }
 
-    Color MixColors(Color color1, Color color2)
-    {
-        // Mix the colors (you can adjust the mixing logic as needed)
-        return (color1 + color2) / 2f;
-    }
+    public Color MixColors(Color color1, Color color2) => (color1 + color2) / 2f;
 
-    // Function to play a random audio clip
     public void PlayRandomClip()
     {
-        if (_audioSource != null)
+        if (audioClips.Length > 0)
         {
-            if (audioClips.Length == 0)
-            {
-                Debug.LogWarning("No audio clips assigned.");
-                return;
-            }
-
-            // Select a random audio clip
-            int randomIndex = Random.Range(0, audioClips.Length);
-            AudioClip randomClip = audioClips[randomIndex];
-
-            // Play the selected audio clip
-            _audioSource.clip = randomClip;
+            _audioSource.clip = audioClips[Random.Range(0, audioClips.Length)];
             _audioSource.Play();
-
-            Debug.Log("Played SFX.");
-        }
-        else
-        {
-            Debug.LogWarning("No Audio Source Found");
         }
     }
 
     IEnumerator TransitionColor(string childName, Color startColor, Color endColor, float duration)
     {
-        Transform child = transform.Find(childName);
-        if (child != null)
+        var child = transform.Find(childName);
+        var spriteRenderer = child?.GetComponent<SpriteRenderer>();
+        if (spriteRenderer != null)
         {
-            SpriteRenderer spriteRenderer = child.GetComponent<SpriteRenderer>();
-            if (spriteRenderer != null)
+            for (float t = 0; t < duration; t += Time.deltaTime)
             {
-                float elapsedTime = 0f;
-                while (elapsedTime < duration)
-                {
-                    spriteRenderer.color = Color.Lerp(startColor, endColor, elapsedTime / duration);
-                    elapsedTime += Time.deltaTime;
-                    yield return null;
-                }
-                spriteRenderer.color = endColor;
+                spriteRenderer.color = Color.Lerp(startColor, endColor, t / duration);
+                yield return null;
             }
-        }
-        else
-        {
-            Debug.LogWarning($"Child named {childName} not found.");
+            spriteRenderer.color = endColor;
         }
     }
 }

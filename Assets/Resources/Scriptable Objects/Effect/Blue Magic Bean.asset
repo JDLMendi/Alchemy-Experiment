@@ -1,0 +1,20 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 225ffb8dc2590644899ade2a1a7d9419, type: 3}
+  m_Name: Blue Magic Bean
+  m_EditorClassIdentifier: 
+  itemName: Blue Magic Bean
+  itemID: 13
+  itemtype: 2
+  itemColour: {r: 0.13679248, g: 0.38016313, b: 1, a: 1}
+  itemSprite: {fileID: 21300000, guid: 05687c64c8eddfc42aa41dd1ea79749d, type: 3}
+  fallSprite: {fileID: 21300000, guid: fd4b850bc5991f6458c5fdd3b964bdef, type: 3}
